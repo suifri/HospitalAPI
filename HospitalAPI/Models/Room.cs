@@ -22,6 +22,6 @@ namespace HospitalAPI.Models
         [ForeignKey("Patient")]
         public Guid PatientId { get; set; }
         public IEnumerable<Patient> patients { get; set; } = Enumerable.Empty<Patient>();
-        
+
     }
 }
