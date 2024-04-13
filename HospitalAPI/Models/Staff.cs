@@ -28,7 +28,6 @@ namespace HospitalAPI.Models
         public int SSN { get; set; }
 
         public Doctor Doctor_ { get; set; } = null!;
-        public Nurse Nurse_ { get; set; } = null!;
         public Payroll Payroll_ { get; set; } = null!;
 
         [ForeignKey("Department")]

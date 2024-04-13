@@ -14,7 +14,7 @@ namespace HospitalAPI.Models
         [StringLength(20)]
         public string PatientLName { get; set; } = string.Empty;
 
-        [StringLength(12)]
+        [StringLength(25)]
         public string Phone { get; set; } = string.Empty;
 
         [StringLength(5)]
@@ -35,14 +35,9 @@ namespace HospitalAPI.Models
 
         public IEnumerable<Bill> bills { get; set; } = Enumerable.Empty<Bill>();
 
-        public MedicalHistory MedicalHistory { get; set; } = null!;
-        public IEnumerable<LabScreening> LabScreenings { get; set; } = Enumerable.Empty<LabScreening>();
-
         public IEnumerable<Prescription> Prescriptions { get; set; } = Enumerable.Empty<Prescription>();
 
         public IEnumerable<Appointment> Appointments { get; set; } = Enumerable.Empty<Appointment>();
-
-        public IEnumerable<Nurse> Nurses { get; set; } = Enumerable.Empty<Nurse>();
 
         public Insurance Insurance_ { get; set; } = null!;
     }

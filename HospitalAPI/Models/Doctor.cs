@@ -20,8 +20,6 @@ namespace HospitalAPI.Models
         [ForeignKey("Staff")]
         public Guid StaffId { get; set; }
         public Staff Staff_ { get; set; } = null!;
-
-        public IEnumerable<LabScreening> LabScreenings { get; set; } = Enumerable.Empty<LabScreening>(); 
         public IEnumerable<Prescription> Prescriptions { get; set; } = Enumerable.Empty<Prescription>();
     }
 }

@@ -4,6 +4,7 @@ using HospitalAPI.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HospitalAPI.Migrations
 {
     [DbContext(typeof(HospitalContext))]
-    partial class HospitalContextModelSnapshot : ModelSnapshot
+    [Migration("20240413132351_DeleteNurseAndLabs")]
+    partial class DeleteNurseAndLabs
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -71,6 +74,15 @@ namespace HospitalAPI.Migrations
 
                     b.Property<Guid>("PatientId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("PolicyNumber")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<decimal>("RemainingBalance")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("decimal(10,2)");
 
                     b.Property<decimal>("RoomCost")
                         .HasPrecision(10, 2)
@@ -197,6 +209,33 @@ namespace HospitalAPI.Migrations
                     b.ToTable("Insurances");
                 });
 
+            modelBuilder.Entity("HospitalAPI.Models.MedicalHistory", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Allergies")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<Guid>("PatientId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("PreConditions")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PatientId")
+                        .IsUnique();
+
+                    b.ToTable("MedicalHistories");
+                });
+
             modelBuilder.Entity("HospitalAPI.Models.Medicine", b =>
                 {
                     b.Property<Guid>("Id")
@@ -264,8 +303,8 @@ namespace HospitalAPI.Migrations
 
                     b.Property<string>("Phone")
                         .IsRequired()
-                        .HasMaxLength(25)
-                        .HasColumnType("nvarchar(25)");
+                        .HasMaxLength(12)
+                        .HasColumnType("nvarchar(12)");
 
                     b.Property<int>("Room_Id")
                         .HasColumnType("int");
@@ -477,6 +516,17 @@ namespace HospitalAPI.Migrations
                     b.Navigation("Patient_");
                 });
 
+            modelBuilder.Entity("HospitalAPI.Models.MedicalHistory", b =>
+                {
+                    b.HasOne("HospitalAPI.Models.Patient", "Patient_")
+                        .WithOne("MedicalHistory")
+                        .HasForeignKey("HospitalAPI.Models.MedicalHistory", "PatientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Patient_");
+                });
+
             modelBuilder.Entity("HospitalAPI.Models.Patient", b =>
                 {
                     b.HasOne("HospitalAPI.Models.Room", "Room_")
@@ -561,6 +611,9 @@ namespace HospitalAPI.Migrations
                     b.Navigation("Appointments");
 
                     b.Navigation("Insurance_")
+                        .IsRequired();
+
+                    b.Navigation("MedicalHistory")
                         .IsRequired();
 
                     b.Navigation("Prescriptions");

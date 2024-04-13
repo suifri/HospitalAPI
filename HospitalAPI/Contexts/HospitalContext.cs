@@ -10,10 +10,7 @@ namespace HospitalAPI.Contexts
         public DbSet<Department> Departments => Set<Department>();
         public DbSet<Doctor> Doctors => Set<Doctor>();
         public DbSet<Insurance> Insurances => Set<Insurance>();
-        public DbSet<LabScreening> LabScreenings => Set<LabScreening>();
-        public DbSet<MedicalHistory> MedicalHistories => Set<MedicalHistory>();
         public DbSet<Medicine> Medicines => Set<Medicine>();
-        public DbSet<Nurse> Nurses => Set<Nurse>();
         public DbSet<Patient> Patients => Set<Patient>();
         public DbSet<Payroll> Payrolls => Set<Payroll>();
         public DbSet<Prescription> Prescriptions => Set<Prescription>();

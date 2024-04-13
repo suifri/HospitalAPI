@@ -20,14 +20,8 @@ namespace HospitalAPI.Models
         [StringLength(20)]
         public string Provider {  get; set; } = string.Empty;
 
-        [StringLength(20)]
-        public string Plan { get; set; } = string.Empty;
-
         [Precision(10, 2)]
         public decimal Co_Pay {  get; set; }
-
-        [StringLength(20)]
-        public string Coverage { get; set; } = string.Empty;
         public bool Maternity { get; set; }
         public bool Dental { get; set; }
         public bool Optical { get; set; }

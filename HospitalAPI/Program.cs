@@ -1,5 +1,6 @@
 using Bogus;
 using HospitalAPI.Contexts;
+using HospitalAPI.DIContainers;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,7 +14,8 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<HospitalContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddSingleton<Faker>();
+builder.Services.AddFakersDependencyInjection();
+builder.Services.AddRepositoriesInjection();
 
 var app = builder.Build();
 

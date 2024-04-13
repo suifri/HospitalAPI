@@ -9,5 +9,7 @@
         public const string PostOperative = "Post-operative";
         public const string Chronic = "Chronic";
         public const string Rehabilitation = "Rehabilitation";
+
+        public static IEnumerable<string> BloodTypes = new string[] { "O", "A", "B", "AB" };
     }
 }

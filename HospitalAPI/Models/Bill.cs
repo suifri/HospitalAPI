@@ -30,12 +30,6 @@ namespace HospitalAPI.Models
         [Precision(10, 2)]
         public decimal Total { get; set; }
 
-        [Precision(10, 2)]
-        public decimal RemainingBalance { get; set; }
-
-        [MaxLength(20)]
-        public string PolicyNumber { get; set; } = null!;
-
         [ForeignKey("Patient")]
         public Guid PatientId { get; set; }
         public Patient Patient_ { get; set; } = null!;
