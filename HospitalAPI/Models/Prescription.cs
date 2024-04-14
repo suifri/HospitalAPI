@@ -17,7 +17,7 @@ namespace HospitalAPI.Models
 
         [ForeignKey("Medicine")]
         public Guid MedicineId { get; set; }
-        public IEnumerable<Medicine> medicines { get; set; } = Enumerable.Empty<Medicine>();
+        public ICollection<Medicine> medicines { get; set; } = null!;
 
         [ForeignKey("Doctor")]
         public Guid DoctorId { get; set; }

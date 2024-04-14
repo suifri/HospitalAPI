@@ -14,9 +14,10 @@ namespace HospitalAPI.Repositories.Implementations
             await _context.Set<T>().AddAsync(entity);
         }
 
-        public async Task AddRange(IEnumerable<T> entities)
+        public async Task AddRange(ICollection<T> entities)
         {
-            await _context.Set<T>().AddRangeAsync(entities);
+           await _context.Set<T>().AddRangeAsync(entities);
+
         }
 
         public async Task<IEnumerable<T>> Find(Expression<Func<T, bool>> predicate)

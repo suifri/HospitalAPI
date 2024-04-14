@@ -8,16 +8,16 @@ namespace HospitalAPI.Models
     {
         [Key]
         [Required]
-        [StringLength(20)]
+        [StringLength(50)]
         public string PolicyNumber { get; set; } = string.Empty;
 
-        [StringLength(20)]
+        [StringLength(50)]
         public string InsCode { get; set; } = string.Empty;
 
-        [StringLength(20)]
+        [StringLength(50)]
         public string EndDate {  get; set; } = string.Empty;
 
-        [StringLength(20)]
+        [StringLength(200)]
         public string Provider {  get; set; } = string.Empty;
 
         [Precision(10, 2)]

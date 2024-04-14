@@ -8,10 +8,10 @@ namespace HospitalAPI.Models
         [Required]
         public Guid Id { get; set; }
 
-        [StringLength(20)]
+        [StringLength(200)]
         public string PatientFName { get; set; } = string.Empty;
 
-        [StringLength(20)]
+        [StringLength(200)]
         public string PatientLName { get; set; } = string.Empty;
 
         [StringLength(25)]
@@ -20,24 +20,24 @@ namespace HospitalAPI.Models
         [StringLength(5)]
         public string BloodType { get; set; } = string.Empty;
 
-        [StringLength(50)]
+        [StringLength(100)]
         public string Email { get; set; } = string.Empty;
 
         [StringLength(20)]
         public string Gender { get; set; } = string.Empty;
 
-        [StringLength(30)]
+        [StringLength(60)]
         public string Condition { get; set; } = string.Empty;
         public DateTime AdmissionDate { get; set; }
         public DateTime DischargeTime { get; set; }
 
-        public Room Room_ { get; set; } = null!;
+        public RoomPatients RoomPatient { get; set; } = null!;
 
-        public IEnumerable<Bill> bills { get; set; } = Enumerable.Empty<Bill>();
+        public ICollection<Bill> bills { get; set; } = null!;
 
-        public IEnumerable<Prescription> Prescriptions { get; set; } = Enumerable.Empty<Prescription>();
+        public ICollection<Prescription> Prescriptions { get; set; } = null!;
 
-        public IEnumerable<Appointment> Appointments { get; set; } = Enumerable.Empty<Appointment>();
+        public ICollection<Appointment> Appointments { get; set; } = null!;
 
         public Insurance Insurance_ { get; set; } = null!;
     }

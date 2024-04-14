@@ -150,7 +150,7 @@ namespace HospitalAPI.Fakers
         {
             RuleFor(d => d.Id, Guid.NewGuid());
             RuleFor(d => d.Qualifications, f => qualifications.ElementAt(f.Random.Number(0, qualifications.Count() - 1)));
-            RuleFor(d => d.Specialization, f => doctorSpecializations.ElementAt(f.Random.Number(0, doctorSpecializations.Count)));
+            RuleFor(d => d.Specialization, f => doctorSpecializations.ElementAt(f.Random.Number(0, doctorSpecializations.Count - 1)));
             RuleFor(d => d.StaffId, f => Guid_);
         }
     }

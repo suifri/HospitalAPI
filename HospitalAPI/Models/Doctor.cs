@@ -9,17 +9,17 @@ namespace HospitalAPI.Models
         [Required]
         public Guid Id { get; set; }
 
-        [StringLength(15)]
+        [StringLength(100)]
         public string Qualifications { get; set; } = string.Empty;
 
-        [StringLength(20)]
+        [StringLength(100)]
         public string Specialization {  get; set; } = string.Empty;
 
-        public IEnumerable<Appointment> Appointments { get; set; } = Enumerable.Empty<Appointment>();
+        public ICollection<Appointment> Appointments { get; set; } = null!;
 
         [ForeignKey("Staff")]
         public Guid StaffId { get; set; }
         public Staff Staff_ { get; set; } = null!;
-        public IEnumerable<Prescription> Prescriptions { get; set; } = Enumerable.Empty<Prescription>();
+        public ICollection<Prescription> Prescriptions { get; set; } = null!;
     }
 }

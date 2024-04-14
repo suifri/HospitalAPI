@@ -9,13 +9,13 @@ namespace HospitalAPI.Models
         [Required]
         public Guid Id { get; set; }
 
-        [StringLength(20)]
+        [StringLength(100)]
         public string MName { get; set; } = string.Empty;
         public int MQuantity { get; set; }
 
         [Precision(10, 2)]
         public decimal MCost { get; set; }
 
-        public IEnumerable<Prescription> prescriptions { get; set; } = Enumerable.Empty<Prescription>();
+        public ICollection<Prescription> prescriptions { get; set; } = null!;
     }
 }

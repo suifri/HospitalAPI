@@ -16,5 +16,23 @@ namespace HospitalAPI.Contexts
         public DbSet<Prescription> Prescriptions => Set<Prescription>();
         public DbSet<Room> Rooms => Set<Room>();
         public DbSet<Staff> Staff_ => Set<Staff>();
+        public DbSet<RoomPatients> RoomPatients => Set<RoomPatients>();
+
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<RoomPatients>(entity =>
+            {
+                entity.HasKey(e => new { e.PatientId, e.RoomId });
+
+                entity.HasOne(d => d.Patient).WithOne(e => e.RoomPatient)
+                    .HasForeignKey<RoomPatients>(d => d.PatientId);
+
+                entity.HasOne(d => d.Room).WithMany(e => e.RoomPatients)
+                    .HasForeignKey(d => d.RoomId);
+            });
+
+        
+        }
     }
 }

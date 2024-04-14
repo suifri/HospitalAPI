@@ -9,21 +9,21 @@ namespace HospitalAPI.Models
         [Required]
         public Guid Id { get; set; }
 
-        [StringLength(20)]
+        [StringLength(40)]
         public string EmpFName { get; set; } = string.Empty;
 
-        [StringLength(20)]
+        [StringLength(40)]
         public string EmpLName { get; set; } = string.Empty;
         public DateOnly DateJoining { get; set; }
         public DateOnly DateSeparation { get; set; }
 
-        [StringLength(15)]
+        [StringLength(100)]
         public string EmpType { get; set; } = string.Empty;
 
         [StringLength(50)]
         public string Email {  get; set; } = string.Empty;
 
-        [StringLength(50)]
+        [StringLength(200)]
         public string Address { get; set; } = string.Empty;
         public int SSN { get; set; }
 
