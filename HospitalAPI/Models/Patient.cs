@@ -31,6 +31,10 @@ namespace HospitalAPI.Models
         public DateTime AdmissionDate { get; set; }
         public DateTime DischargeTime { get; set; }
 
+        public bool Rhesus {  get; set; }
+
+        public string Diagnosis {  get; set; } = string.Empty;
+
         public RoomPatients RoomPatient { get; set; } = null!;
 
         public ICollection<Bill> bills { get; set; } = null!;

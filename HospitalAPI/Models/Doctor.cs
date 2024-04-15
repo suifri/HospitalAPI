@@ -20,6 +20,11 @@ namespace HospitalAPI.Models
         [ForeignKey("Staff")]
         public Guid StaffId { get; set; }
         public Staff Staff_ { get; set; } = null!;
+
+        [ForeignKey("Schedule")]
+        public Guid ScheduleId { get; set; }
+        public Schedule Schedule_ { get; set; } = null!;
+
         public ICollection<Prescription> Prescriptions { get; set; } = null!;
     }
 }

@@ -1,9 +1,10 @@
 ﻿using HospitalAPI.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace HospitalAPI.Contexts
 {
-    public class HospitalContext(DbContextOptions<HospitalContext> options) : DbContext(options)
+    public class HospitalContext(DbContextOptions<HospitalContext> options) : IdentityDbContext<HospitalUser>(options)
     {
         public DbSet<Appointment> Appointments => Set<Appointment>();
         public DbSet<Bill> Bills => Set<Bill>();
@@ -18,9 +19,13 @@ namespace HospitalAPI.Contexts
         public DbSet<Staff> Staff_ => Set<Staff>();
         public DbSet<RoomPatients> RoomPatients => Set<RoomPatients>();
 
+        public DbSet<Schedule> Schedules => Set<Schedule>();
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<RoomPatients>(entity =>
             {
                 entity.HasKey(e => new { e.PatientId, e.RoomId });
@@ -32,7 +37,9 @@ namespace HospitalAPI.Contexts
                     .HasForeignKey(d => d.RoomId);
             });
 
-        
+            modelBuilder.Entity<Doctor>().HasOne(a => a.Schedule_).WithOne(a => a.Doctor_).HasForeignKey<Schedule>(s => s.DoctorId);
         }
+
+
     }
 }

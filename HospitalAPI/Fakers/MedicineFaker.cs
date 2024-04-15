@@ -374,6 +374,8 @@ namespace HospitalAPI.Fakers
             RuleFor(m => m.MName, f => m_names.ElementAt(f.Random.Number(0, m_names.Count() - 1)));// add medicine names
             RuleFor(m => m.MQuantity, f => f.Random.Number(1, 56));
             RuleFor(m => m.MCost, f => f.Random.Decimal(1, 1234));
+            RuleFor(m => m.MAmount, f => f.Random.Number(10, 100));
+            RuleFor(m => m.MDosage, f => f.Random.Number(5, 95));
         }
     }
 }

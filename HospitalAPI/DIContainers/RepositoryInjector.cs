@@ -19,6 +19,7 @@ namespace HospitalAPI.DIContainers
             services.AddScoped<IRoomRepository, RoomRepository>();
             services.AddScoped<IStaffRepository, StaffRepository>();
             services.AddScoped<IRoomPatientRepository, RoomPatientRepository>();
+            services.AddScoped<IScheduleRepository, ScheduleRepository>();
 
             return services;
         }

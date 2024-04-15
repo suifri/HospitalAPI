@@ -21,7 +21,7 @@ namespace HospitalAPI.Controllers
         IPrescriptionRepository prescriptionRepository,
         IRoomRepository roomRepository,
         IStaffRepository staffRepository,
-        IRoomPatientRepository roomPatientRepository) : ControllerBase
+        IScheduleRepository scheduleRepository) : ControllerBase
     {
         [HttpPut(Name = "Seed patient table")]
         public async Task<IActionResult> SeedPatientTable()
@@ -86,6 +86,7 @@ namespace HospitalAPI.Controllers
             List<Staff> staffs = new List<Staff>();
             List<Payroll> payrolls = new List<Payroll>();
             List<Doctor> doctors = new List<Doctor>();
+            List<Schedule> schedules = new List<Schedule>();
 
             for (int i = 0; i < 1488; ++i)
             {
@@ -98,6 +99,8 @@ namespace HospitalAPI.Controllers
                 {
                     doctors.Add(new DoctorFaker());
                     doctors[i].StaffId = staffs[i].Id;
+                    schedules.Add(new SchedulesFaker());
+                    schedules[i].DoctorId = doctors[i].Id;
                 }
             }
 
@@ -163,6 +166,9 @@ namespace HospitalAPI.Controllers
 
             await prescriptionRepository.AddRange(prescriptions);
             await prescriptionRepository.SaveChanges();
+
+            await scheduleRepository.AddRange(schedules);
+            await scheduleRepository.SaveChanges();
 
             return Ok();
         }

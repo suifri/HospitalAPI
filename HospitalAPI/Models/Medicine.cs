@@ -15,6 +15,9 @@ namespace HospitalAPI.Models
 
         [Precision(10, 2)]
         public decimal MCost { get; set; }
+        public int MDosage { get; set; }
+
+        public int MAmount { get; set; }
 
         public ICollection<Prescription> prescriptions { get; set; } = null!;
     }
