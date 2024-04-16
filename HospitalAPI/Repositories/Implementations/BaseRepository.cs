@@ -9,28 +9,28 @@ namespace HospitalAPI.Repositories.Implementations
     {
         protected readonly HospitalContext _context = context;
 
-        public async Task Add(T entity)
+        public virtual async Task Add(T entity)
         {
             await _context.Set<T>().AddAsync(entity);
         }
 
-        public async Task AddRange(ICollection<T> entities)
+        public virtual async Task AddRange(ICollection<T> entities)
         {
            await _context.Set<T>().AddRangeAsync(entities);
 
         }
 
-        public async Task<IEnumerable<T>> Find(Expression<Func<T, bool>> predicate)
+        public virtual async Task<IEnumerable<T>> Find(Expression<Func<T, bool>> predicate)
         {
             return await _context.Set<T>().Where(predicate).ToListAsync();
         }
 
-        public async Task<IEnumerable<T>> GetAll()
+        public virtual async Task<IEnumerable<T>> GetAll()
         {
             return await _context.Set<T>().ToListAsync();
         }
 
-        public void Remove(T entity)
+        public virtual void Remove(T entity)
         {
             _context.Set<T>().Remove(entity);
         }
@@ -40,7 +40,7 @@ namespace HospitalAPI.Repositories.Implementations
             await _context.SaveChangesAsync();
         }
 
-        public void Update(T entity)
+        public virtual void Update(T entity)
         {
             _context.Set<T>().Update(entity);
         }

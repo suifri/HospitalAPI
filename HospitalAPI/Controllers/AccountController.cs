@@ -1,6 +1,10 @@
-﻿using HospitalAPI.Contexts;
+﻿using Bogus;
+using HospitalAPI.Constants;
+using HospitalAPI.Contexts;
 using HospitalAPI.DTO;
 using HospitalAPI.Models;
+using HospitalAPI.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -16,9 +20,53 @@ namespace HospitalAPI.Controllers
     public class AccountController(HospitalContext context,
         UserManager<HospitalUser> userManager,
         SignInManager<HospitalUser> signInManager,
-        IConfiguration configuration
+        IConfiguration configuration,
+        IDoctorRepository doctorRepository,
+        IPatientRepository patientRepository
         ) : ControllerBase
     {
+
+        [Authorize(Roles = RoleNames.Administrator)]
+        [HttpPost]
+        public async Task<IActionResult> RegisterExistingUsers()
+        {
+            var patients = await patientRepository.GetAll();
+
+            foreach (var patient in patients)
+            {
+                var newUser = new HospitalUser() { UserName = patient.PatientFName + patient.PatientLName, Email = patient.Email };
+                await userManager.CreateAsync(newUser, new Faker().Internet.Password());
+
+                var search = await userManager.FindByNameAsync(newUser.UserName);
+                if (search is not null)
+                    await userManager.AddToRoleAsync(search, RoleNames.Patient);
+            }
+
+            var doctors = await doctorRepository.GetAll();
+
+            foreach (var doctor in doctors)
+            {
+                var newUser = new HospitalUser() { UserName = doctor.Staff_.EmpFName + doctor.Staff_.EmpLName, Email = doctor.Staff_.Email };
+                var result = await userManager.CreateAsync(newUser, new Faker().Internet.Password());
+
+                var search = await userManager.FindByNameAsync(newUser.UserName);
+                if (search is not null)
+                    await userManager.AddToRoleAsync(search, RoleNames.Doctor);
+            }
+
+            var administrator = new { Name = "Illia", FName = "Khveshchuk", Email = "illiaKhveshchuk@gmail.com" };
+
+            var hospitalAdministrator = new HospitalUser() { UserName = administrator.Name + administrator.FName, Email = administrator.Email };
+
+            await userManager.CreateAsync(hospitalAdministrator, "Db1488htry");
+
+            var search_ = await userManager.FindByNameAsync("IlliaKhveshchuk");
+
+            await userManager.AddToRoleAsync(search_, RoleNames.Administrator);
+
+            return StatusCode(201);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Register(RegisterDTO registerDTO)
         {
@@ -61,7 +109,7 @@ namespace HospitalAPI.Controllers
             {
                 if(ModelState.IsValid)
                 {
-                    var user = await userManager.FindByNameAsync(loginDTO.Username);
+                    var user = await userManager.FindByEmailAsync(loginDTO.Email);
 
                     if (user == null || !await userManager.CheckPasswordAsync(user, loginDTO.Password))
                         throw new Exception("Invalid login attempt.");
@@ -73,6 +121,8 @@ namespace HospitalAPI.Controllers
                         var claims = new List<Claim>();
 
                         claims.Add(new Claim(ClaimTypes.Name, user.UserName));
+
+                        claims.AddRange((await userManager.GetRolesAsync(user)).Select(r => new Claim(ClaimTypes.Role, r)));
 
                         var jwtObject = new JwtSecurityToken(
                             issuer: configuration["JWT:Issuer"],

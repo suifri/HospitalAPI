@@ -5,6 +5,9 @@ using Bogus;
 using HospitalAPI.Models;
 using HospitalAPI.Fakers;
 using HospitalAPI.Repositories.Interfaces;
+using Microsoft.AspNetCore.Identity;
+using HospitalAPI.Constants;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HospitalAPI.Controllers
 {
@@ -21,11 +24,16 @@ namespace HospitalAPI.Controllers
         IPrescriptionRepository prescriptionRepository,
         IRoomRepository roomRepository,
         IStaffRepository staffRepository,
-        IScheduleRepository scheduleRepository) : ControllerBase
+        IScheduleRepository scheduleRepository,
+        RoleManager<IdentityRole> roleManager,
+        UserManager<HospitalUser> userManager,
+        ILogger<SeederController> logger) : ControllerBase
     {
+        [Authorize(Roles = RoleNames.Administrator)]
         [HttpPut(Name = "Seed patient table")]
         public async Task<IActionResult> SeedPatientTable()
         {
+            logger.LogInformation("Started seeding database");
 
             List<Patient> patients = new List<Patient>();
             List<Insurance> insurances = new List<Insurance>();
@@ -170,8 +178,39 @@ namespace HospitalAPI.Controllers
             await scheduleRepository.AddRange(schedules);
             await scheduleRepository.SaveChanges();
 
+            logger.LogInformation("Ending seeding database");
+
             return Ok();
         }
 
+        [Authorize(Roles = RoleNames.Administrator)]
+        [HttpPost]
+        public async Task<IActionResult> AuthData()
+        {
+            logger.LogInformation("Started creating roles at {0}", DateTime.Now);
+
+            int rolesCreated = 0;
+            int usersAddedToRoles = 0;
+
+            if(!await roleManager.RoleExistsAsync(RoleNames.Patient))
+            {
+                await roleManager.CreateAsync(new IdentityRole(RoleNames.Patient));
+                ++rolesCreated;
+            }
+            if(!await roleManager.RoleExistsAsync(RoleNames.Doctor))
+            {
+                await roleManager.CreateAsync(new IdentityRole(RoleNames.Doctor));
+                ++rolesCreated;
+            }
+            if(!await roleManager.RoleExistsAsync(RoleNames.Administrator))
+            {
+                await roleManager.CreateAsync(new IdentityRole(RoleNames.Administrator));
+                ++rolesCreated; 
+            }
+
+            logger.LogInformation($"Ended adding roles{DateTime.Now}");
+
+            return new JsonResult(new { RolesCreated = rolesCreated, usersAddedToRoles = usersAddedToRoles });
+        }
     }
 }

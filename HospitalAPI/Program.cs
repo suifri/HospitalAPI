@@ -9,8 +9,25 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Serilog;
+using Serilog.Sinks.MSSqlServer;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseSerilog((ctx, lc) =>
+{
+    lc.ReadFrom.Configuration(ctx.Configuration);
+    lc.WriteTo.MSSqlServer(
+        connectionString: ctx.Configuration.GetConnectionString("DefaultConnection"),
+        sinkOptions: new Serilog.Sinks.MSSqlServer.MSSqlServerSinkOptions
+        {
+            TableName = "LogEvents",
+            AutoCreateSqlTable = true,
+        }
+        );
+},
+writeToProviders: true
+);
 
 // Add services to the container.
 // Add schedule table + add medicine dosage + add medicine table amount + patient resus faktor 
@@ -49,10 +66,12 @@ builder.Services.AddDbContext<HospitalContext>(options => options.UseSqlServer(b
 builder.Services.AddFakersDependencyInjection();
 builder.Services.AddRepositoriesInjection();
 builder.Services.AddIdentity<HospitalUser, IdentityRole>(opt => {
-    opt.Password.RequireDigit = true;
-    opt.Password.RequireLowercase = true;
-    opt.Password.RequireUppercase = true;
-    opt.Password.RequiredLength = 8;
+    opt.Password.RequireDigit = false;
+    opt.Password.RequireLowercase = false;
+    opt.Password.RequireUppercase = false;
+    opt.Password.RequireNonAlphanumeric =  false;
+    opt.Password.RequiredUniqueChars = 0;
+    opt.Password.RequiredLength = 1;
 }).AddEntityFrameworkStores<HospitalContext>();
 
 builder.Services.AddAuthentication(options =>
