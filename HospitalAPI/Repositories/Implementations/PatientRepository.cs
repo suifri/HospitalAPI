@@ -1,6 +1,7 @@
 ﻿using HospitalAPI.Contexts;
 using HospitalAPI.Models;
 using HospitalAPI.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
 namespace HospitalAPI.Repositories.Implementations
