@@ -8,6 +8,6 @@ namespace HospitalAPI.Repositories.Implementations
 {
     public class PatientRepository(HospitalContext context) : BaseRepository<Patient>(context), IPatientRepository
     {
-
+        
     }
 }

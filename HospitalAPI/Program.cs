@@ -29,6 +29,15 @@ builder.Host.UseSerilog((ctx, lc) =>
 writeToProviders: true
 );
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAnyOrigin",
+        builder => builder
+            .AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader());
+});
+
 // Add services to the container.
 // Add schedule table + add medicine dosage + add medicine table amount + patient resus faktor 
 
@@ -104,6 +113,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors("AllowAnyOrigin");
 
 app.UseHttpsRedirection();
 
