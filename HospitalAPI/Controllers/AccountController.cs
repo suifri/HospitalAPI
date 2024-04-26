@@ -103,8 +103,56 @@ namespace HospitalAPI.Controllers
         }
 
         [HttpPost]
+        public async Task<ModelResponseDTO> LoginByModel(LoginDTO login)
+        {
+            try
+            {
+                if(ModelState.IsValid)
+                {
+                    var user = await userManager.FindByEmailAsync(login.Email);
+
+                    if (user == null || !await userManager.CheckPasswordAsync(user, login.Password))
+                        throw new Exception("Invalid login attempt");
+                    else
+                        return new ModelResponseDTO { Role = userManager.GetRolesAsync(user).Result.First().ToLower() };
+                }
+                else
+                {
+                    var details = new ValidationProblemDetails(ModelState);
+                    details.Type =
+                    "https://tools.ietf.org/html/rfc7231#section-6.5.1";
+                    details.Status = StatusCodes.Status400BadRequest;
+                    return null;
+
+                }
+            }
+            catch
+            {
+                return null;
+            }
+
+        }
+
+
+        [HttpPatch]
+        public async Task<IActionResult> GetPassword()
+        {
+            var user = await userManager.FindByEmailAsync("Sidney78@yahoo.com");
+            await userManager.RemovePasswordAsync(user);
+            await userManager.AddPasswordAsync(user, "test");
+
+            var doc = await userManager.FindByEmailAsync("Perry.Schmeler21@gmail.com");
+            await userManager.RemovePasswordAsync(doc);
+            await userManager.AddPasswordAsync(doc, "test");
+
+            return Ok();
+        }
+
+        [HttpPost]
         public async Task<IActionResult> Login(LoginDTO loginDTO)
         {
+            
+
             try
             {
                 if(ModelState.IsValid)
@@ -153,4 +201,6 @@ namespace HospitalAPI.Controllers
             }
         }
     }
+
+
 }

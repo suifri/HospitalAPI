@@ -22,5 +22,18 @@ namespace HospitalAPI.Mappers
                 SSN = source.Staff_.SSN
             };
         }
+
+        public static ResponseAppointmentDTO Appointment2Response(Appointment source)
+        {
+            return new ResponseAppointmentDTO
+            {
+                Id = source.Id,
+                Date = source.Date,
+                DoctorId = source.DoctorId,
+                PatientId = source.PatientId,
+                ScheduledOn = source.ScheduledOn,
+                Time = source.Time
+            };
+        }
     }
 }

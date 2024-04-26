@@ -4,6 +4,7 @@ using HospitalAPI.Models;
 using HospitalAPI.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq.Dynamic.Core;
 using System.Numerics;
@@ -12,7 +13,7 @@ namespace HospitalAPI.Controllers
 {
     [Route("[controller]/[action]")]
     [ApiController]
-    public class PatientController(IPatientRepository patientRepository) : ControllerBase
+    public class PatientController(IPatientRepository patientRepository, UserManager<HospitalUser> userManager) : ControllerBase
     {
         //[Authorize(Roles = $"{RoleNames.Doctor},{RoleNames.Administrator}")]
         [HttpGet]
@@ -21,11 +22,46 @@ namespace HospitalAPI.Controllers
             return await patientRepository.GetAll();
         }
 
-        [Authorize(Roles = $"{RoleNames.Patient},{RoleNames.Doctor},{RoleNames.Administrator}")]
+        //[Authorize(Roles = $"{RoleNames.Patient},{RoleNames.Doctor},{RoleNames.Administrator}")]
         [HttpGet]
-        public async Task<IEnumerable<Patient>> GetByEmail(string email)
+        public async Task<Patient> GetByEmail(string email)
         {
-            return await patientRepository.Find(x => x.Email == email);
+            return patientRepository.Find(x => x.Email == email).Result.First();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddByDTO(RequestPatientDTO patient)
+        {
+            var pat = new Patient()
+            {
+                Id = Guid.NewGuid(),
+                AdmissionDate = DateTime.Now,
+                BloodType = patient.BloodType,
+                Condition = patient.Condition,
+                Diagnosis = string.Empty,
+                Email = patient.Email,
+                Gender = patient.Gender,
+                PatientFName = patient.PatientFName,
+                PatientLName = patient.PatientLName,
+                Phone = patient.Phone,
+                Rhesus = patient.Rhesus,
+            };
+
+            await patientRepository.Add(pat);
+            await patientRepository.SaveChanges();
+
+            var user = new HospitalUser();
+            user.UserName = patient.PatientFName + patient.PatientLName;
+            user.Email = patient.Email;
+
+            var result = await userManager.CreateAsync(user, patient.Password);
+
+            var search = await userManager.FindByEmailAsync(user.Email);
+
+            if (search is not null)
+                await userManager.AddToRoleAsync(search, RoleNames.Patient);
+
+            return Ok();
         }
 
         [HttpGet]
